@@ -25,7 +25,7 @@ export async function updatePR(data){
 
         title: data.title,
 
-        body: data.description
+        body: data.description ?? data.body
 
     });
 

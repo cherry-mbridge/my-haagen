@@ -19,8 +19,8 @@ console.log(result);
 
 
 await updatePR({
-  title: result.title,
-  body: result.description
+    title: result.title,
+    description: result.description
 });
 
 console.log("PR updated");
