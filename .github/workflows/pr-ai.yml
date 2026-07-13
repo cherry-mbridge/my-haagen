@@ -1,0 +1,41 @@
+name: AI PR Generator
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ai-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate Diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+
+          git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > diff.patch
+
+      - name: Generate AI PR
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          node .github/scripts/generate-pr.js
