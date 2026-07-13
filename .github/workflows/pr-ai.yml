@@ -14,6 +14,10 @@ jobs:
   ai-pr:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: .github/scripts
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,8 +28,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: .github/scripts/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
 
       - name: Generate Diff
+        working-directory: .
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }}
 
@@ -38,4 +48,4 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          node .github/scripts/generate-pr.js
+          node generate-pr.js

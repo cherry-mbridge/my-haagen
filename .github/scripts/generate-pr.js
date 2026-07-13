@@ -1,23 +1,26 @@
 import fs from "fs";
+import { generatePR } from "./gemini.js";
+import { updatePR } from "./github.js";
 
-const diff = fs.readFileSync("diff.patch", "utf8");
-
-const prompt = {
-  model: "gemini-2.5-flash",
-  prompt: `
-You are a Senior Software Engineer.
-
-Analyze this git diff.
-
-Return JSON only.
-
-${diff}
-`
-};
-
-fs.writeFileSync(
-  "prompt.json",
-  JSON.stringify(prompt, null, 2)
+const diff = fs.readFileSync(
+  "../../diff.patch",
+  "utf8"
 );
 
-console.log("prompt.json created");
+if (!diff.trim()) {
+  console.log("No changes found");
+  process.exit(0);
+}
+
+
+const result = await generatePR(diff);
+
+console.log(result);
+
+
+await updatePR({
+  title: result.title,
+  body: result.description
+});
+
+console.log("PR updated");

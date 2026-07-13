@@ -1,0 +1,34 @@
+import { Octokit } from "@octokit/rest";
+
+
+const octokit = new Octokit({
+
+    auth: process.env.GITHUB_TOKEN
+
+});
+
+
+export async function updatePR(data){
+
+    const [
+        owner,
+        repo
+    ] = process.env.REPOSITORY.split("/");
+
+
+    await octokit.pulls.update({
+
+        owner,
+
+        repo,
+
+        pull_number:
+            Number(process.env.PR_NUMBER),
+
+        title:data.title,
+
+        body:data.description
+
+    });
+
+}
