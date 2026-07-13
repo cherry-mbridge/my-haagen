@@ -16,19 +16,21 @@ export async function updatePR(data){
     ] = process.env.REPOSITORY.split("/");
 
 
-    await octokit.pulls.update({
+    const response = await octokit.pulls.update({
 
         owner,
-
         repo,
 
-        pull_number:
-            Number(process.env.PR_NUMBER),
+        pull_number: Number(process.env.PR_NUMBER),
 
-        title:data.title,
+        title: data.title,
 
-        body:data.description
+        body: data.description
 
     });
+
+
+    console.log(response.data.title);
+    console.log(response.data.body);
 
 }
