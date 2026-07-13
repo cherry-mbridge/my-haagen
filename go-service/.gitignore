@@ -1,0 +1,12 @@
+# Environment 
+.env 
+.env.* 
+!.env.example
+
+# Air
+air_tmp/
+tmp/
+
+# Logs
+logs/
+*.log
