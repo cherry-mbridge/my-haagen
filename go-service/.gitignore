@@ -10,3 +10,4 @@ tmp/
 # Logs
 logs/
 *.log
+air.log
